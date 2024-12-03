@@ -72,4 +72,4 @@ Whether you're an individual or a small business owner, Ledgerly helps you stay 
 1. **Clone the repository**:
    ```bash
    git clone https://github.com/your-username/ledgerly.git
->>>>>>> 175e5650d068fa65ae90cc14ab2e68c6b98ce944
+
