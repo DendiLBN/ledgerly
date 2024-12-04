@@ -10,6 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { CirclePlus } from "lucide-react";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -19,7 +20,7 @@ export default function Home() {
         <p>
           <Button className="inline-flex" variant="ghost">
             <CirclePlus className="h-4 w-4" />
-            Create Invoice
+            <Link href="/invoices/new">Create Invoice</Link>
           </Button>
         </p>
       </div>
