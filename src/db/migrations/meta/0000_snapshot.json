@@ -1,5 +1,5 @@
 {
-  "id": "8d45c75f-ccfc-4b1c-a771-f82d7558d47d",
+  "id": "f4994b01-12cc-4ebc-8808-3d2fcd8d6ddd",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -14,11 +14,12 @@
           "primaryKey": true,
           "notNull": true
         },
-        "create_ts": {
-          "name": "create_ts",
+        "createTs": {
+          "name": "createTs",
           "type": "timestamp",
           "primaryKey": false,
-          "notNull": true
+          "notNull": true,
+          "default": "now()"
         },
         "value": {
           "name": "value",
@@ -53,12 +54,7 @@
     "public.status": {
       "name": "status",
       "schema": "public",
-      "values": [
-        "open",
-        "paid",
-        "void",
-        "uncollabled"
-      ]
+      "values": ["open", "paid", "void", "uncollabled"]
     }
   },
   "schemas": {},
