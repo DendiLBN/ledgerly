@@ -1,3 +1,4 @@
+import { View } from "@/components/common/view";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,19 +12,23 @@ import {
 } from "@/components/ui/table";
 import { CirclePlus } from "lucide-react";
 import Link from "next/link";
+import { Text } from "@/components/common/text";
 
-export default function Home() {
+export default function DashBoard() {
   return (
-    <main className="flex flex-col justify-center h-full text-center gap-6 max-w-5xl mx-auto my-12">
-      <div className="flex justify-between">
-        <h1 className="text-5xl font-bold">Dashboard</h1>
-        <p>
+    <View
+      as="main"
+      className="flex flex-col justify-center h-full text-center gap-6 max-w-5xl mx-auto my-12"
+    >
+      <View className="flex justify-between">
+        <Text className="text-5xl font-bold">Dashboard</Text>
+        <Text>
           <Button className="inline-flex" variant="ghost">
             <CirclePlus className="h-4 w-4" />
             <Link href="/invoices/new">Create Invoice</Link>
           </Button>
-        </p>
-      </div>
+        </Text>
+      </View>
       <Table>
         <TableCaption>A list of your recent invoices.</TableCaption>
         <TableHeader>
@@ -38,23 +43,23 @@ export default function Home() {
         <TableBody>
           <TableRow>
             <TableCell className="font-medium">
-              <span className="font-semibold">10/31/2024</span>
+              <View className="font-semibold">10/31/2024</View>
             </TableCell>
             <TableCell className="text-left">
-              <span className="font-semibold">Stefan Makler</span>
+              <View className="font-semibold">Stefan Makler</View>
             </TableCell>
             <TableCell className="text-left p-4">
-              <span>Stefan.makler@gmail.com</span>
+              <View>Stefan.makler@gmail.com</View>
             </TableCell>
             <TableCell className="text-center  p-4">
               <Badge className="rounded-full">Open</Badge>
             </TableCell>
             <TableCell className="text-right">
-              <span className="font-semibold  p-4">$250</span>
+              <View className="font-semibold  p-4">$250</View>
             </TableCell>
           </TableRow>
         </TableBody>
       </Table>
-    </main>
+    </View>
   );
 }

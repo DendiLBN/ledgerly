@@ -1,63 +1,67 @@
 "use client";
 
+import Form from "next/form";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { createAction } from "@/app/actions";
 import SubmitButton from "@/components/SubmitButton";
 import { SyntheticEvent, useState } from "react";
+import { View } from "@/components/common/view";
+import { Text } from "@/components/common/text";
 
-export default function Home() {
+export default function FormSubmit() {
   const [state, setState] = useState("ready");
   async function handleOnSubmit(event: SyntheticEvent) {
-    event.preventDefault();
     if (state === "pending") return;
+    event.preventDefault();
     setState("pending");
-    const target = event.target as HTMLFormElement;
-    const formData = new FormData(target);
-    await createAction(formData);
-    console.log("hey");
   }
 
   return (
-    <main className="flex flex-col justify-center h-full gap-6 max-w-5xl mx-auto my-12">
-      <div className="flex justify-between">
-        <h1 className="text-5xl font-bold">Create Invoice</h1>
-      </div>
+    <View
+      as="main"
+      className="flex flex-col justify-center h-full gap-6 max-w-5xl mx-auto my-12"
+    >
+      <View className="flex justify-between">
+        <Text variant="h1" className="text-5xl font-bold">
+          Create Invoice
+        </Text>
+      </View>
 
-      <form
+      <Form
         action={createAction}
         onSubmit={handleOnSubmit}
         className="grid gap-4 max-w-sm"
       >
-        <div>
+        <View>
           <Label htmlFor="name" className="block font-semibold mb-2">
             Billing Name
           </Label>
           <Input id="name" name="name" type="text" />
-        </div>
-        <div>
+        </View>
+        <View>
           <Label htmlFor="email" className="block font-semibold mb-2">
             Billing Email
           </Label>
           <Input id="email" name="email" type="email" />
-        </div>
-        <div>
+        </View>
+        <View>
           <Label htmlFor="value" className="block font-semibold mb-2">
             Value
           </Label>
           <Input id="value" name="value" type="number" />
-        </div>
-        <div>
+        </View>
+        <View>
           <Label htmlFor="description" className="block font-semibold mb-2">
             Description
           </Label>
           <Textarea id="description" name="description" />
-        </div>
-        <div>
+        </View>
+        <View>
           <SubmitButton />
-        </div>
-      </form>
-    </main>
+        </View>
+      </Form>
+    </View>
   );
 }

@@ -1,14 +1,15 @@
 "use client";
 
 import { useFormStatus } from "react-dom";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
+import { Text } from "@/components/common/text";
 
 const SubmitButton = () => {
   const { pending } = useFormStatus();
   console.log("pending", pending);
   return (
     <Button className="w-full font-semibold">
-      <span className={'pending && "text-transparent'}>Submit </span>
+      <Text className={'pending && "text-transparent'}>Submit </Text>
     </Button>
   );
 };
