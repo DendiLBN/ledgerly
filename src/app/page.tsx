@@ -1,3 +1,5 @@
+import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
+
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { View } from "@/components/common/view";
@@ -12,6 +14,12 @@ export default function Home() {
       <Text variant="h1" className="text-5xl font-bold">
         Welcome into Ledgerly
       </Text>
+      <SignedOut>
+        <SignInButton />
+      </SignedOut>
+      <SignedIn>
+        <UserButton />
+      </SignedIn>
       <Text>
         <Button>
           <Link href="/dashboard">Sign In</Link>
