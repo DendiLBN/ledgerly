@@ -1,18 +1,14 @@
 "use client";
+import { SyntheticEvent, useState } from "react";
 
 import Form from "next/form";
 
 import Container from "@/components/common/container";
-
 import { SubmitButton } from "@/components/SubmitButton";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-
 import { Text } from "@/components/common/text";
-
-import { SyntheticEvent, useState } from "react";
-
 import { createAction } from "@/app/actions";
 import { View } from "@/components/common/view";
 
