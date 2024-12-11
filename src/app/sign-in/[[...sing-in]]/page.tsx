@@ -6,6 +6,8 @@ import * as SignIn from "@clerk/elements/sign-in";
 import { View } from "@/components/common/view";
 import { Text } from "@/components/common/text";
 
+import { motion } from "framer-motion";
+
 export default function SignInPage() {
   return (
     <View className="flex flex-col justify-center items-center min-h-screen text-center gap-6 max-w-5xl mx-auto">
@@ -51,7 +53,7 @@ export default function SignInPage() {
             Sign In
           </SignIn.Action>
           <Text className="text-center text-sm text-zinc-500">
-            No account?{" "}
+            No account?
             <Clerk.Link
               navigate="sign-up"
               className="font-medium text-zinc-950 decoration-zinc-950/20 underline-offset-4 outline-none hover:text-zinc-700 hover:underline focus-visible:underline"
