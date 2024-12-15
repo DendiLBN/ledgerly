@@ -1,4 +1,4 @@
-import Container from "@/components/common/Container";
+import Container from "@/components/common/container";
 
 import { Text } from "@/components/common/text";
 import { View } from "@/components/common/view";
