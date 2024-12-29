@@ -18,6 +18,7 @@ export const Invoices = pgTable("invoices", {
   id: serial("id").primaryKey().notNull(),
   createTs: timestamp("createTs").defaultNow().notNull(),
   value: integer("value").notNull(),
+  userId: text("user_id").notNull(),
   description: text("description").notNull(),
   status: statusEnum("status").notNull(),
 });

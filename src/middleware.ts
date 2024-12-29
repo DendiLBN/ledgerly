@@ -5,13 +5,8 @@ const isPublic = createRouteMatcher([
   "/sign-in(.*)",
   "/sign-up(.*)",
   "/invoices/(.*)/payment",
+  "/_clerk",
 ]);
-
-// const isProtected = createRouteMatcher([
-//   '/dashboard',
-//   '/invoices/:invoiceId',
-//   '/invoices/new'
-// ])
 
 export default clerkMiddleware((auth, request) => {
   if (!isPublic(request)) {
@@ -21,8 +16,7 @@ export default clerkMiddleware((auth, request) => {
 
 export const config = {
   matcher: [
-    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-
+    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)|_clerk).*)",
     "/(api|trpc)(.*)",
   ],
 };

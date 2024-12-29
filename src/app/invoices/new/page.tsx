@@ -1,25 +1,35 @@
 "use client";
-import { SyntheticEvent, useState } from "react";
 
-import Form from "next/form";
-
+import { useState } from "react";
 import Container from "@/components/common/container";
 import { SubmitButton } from "@/components/SubmitButton";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Text } from "@/components/common/text";
-import { createAction } from "@/app/actions";
 import { View } from "@/components/common/view";
+import { createAction } from "@/app/actions";
 
-export default function Home() {
+export default function NewInvoice() {
   const [error, setError] = useState<string>();
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-  async function handleOnSubmit(event: SyntheticEvent) {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setError("Submission disabled for demo.");
-    return;
-  }
+
+    setIsSubmitting(true);
+
+    const formData = new FormData(event.currentTarget);
+
+    try {
+      await createAction(formData);
+      setError(undefined);
+    } catch (error) {
+      setError(error || "Failed to create invoice. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <View as="main" className="h-full">
@@ -33,11 +43,7 @@ export default function Home() {
           <Text className="text-3xl font-semibold">Create Invoice</Text>
         </View>
 
-        <Form
-          action={createAction}
-          onSubmit={handleOnSubmit}
-          className="grid gap-4 max-w-xs"
-        >
+        <form onSubmit={handleSubmit} className="grid gap-4 max-w-xs">
           <View>
             <Label htmlFor="name" className="block font-semibold text-sm mb-2">
               Billing Name
@@ -66,9 +72,9 @@ export default function Home() {
             <Textarea id="description" name="description" />
           </View>
           <View>
-            <SubmitButton />
+            <SubmitButton isSubmitting={isSubmitting} />
           </View>
-        </Form>
+        </form>
       </Container>
     </View>
   );

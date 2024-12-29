@@ -1,4 +1,5 @@
 "use client";
+
 import Link from "next/link";
 
 import * as Clerk from "@clerk/elements/common";
@@ -43,11 +44,18 @@ export default function SignInPage() {
           >
             Sign In
           </SignIn.Action>
+          <Text className="mb-4 text-center text-sm/5 text-neutral-500">
+            Alternatively, sign in with these platforms
+          </Text>
           <View className="rounded-xl bg-neutral-100 p-5">
-            <Text className="mb-4 text-center text-sm/5 text-neutral-500">
-              Alternatively, sign in with these platforms
-            </Text>
             <View className="space-y-2">
+              <Text>
+                <SignIn.Passkey asChild>
+                  <Button className="w-full" variant={"outline"}>
+                    Continue with Passkey
+                  </Button>
+                </SignIn.Passkey>
+              </Text>
               <Clerk.Connection
                 name="google"
                 className="flex w-full items-center justify-center gap-x-3 rounded-md bg-gradient-to-b from-white to-neutral-50 px-2 py-1.5 text-sm font-medium text-neutral-950 shadow outline-none ring-1 ring-black/5 hover:to-neutral-100 focus-visible:outline-offset-2 focus-visible:outline-neutral-600 active:text-neutral-950/60"
