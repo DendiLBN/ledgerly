@@ -8,7 +8,6 @@ import { Header } from "@/components/landing-page/Header";
 export default function Home() {
   return (
     <>
-      <Header />
       <View
         as="main"
         className="flex flex-col justify-center items-center min-h-screen text-center gap-6 max-w-5xl mx-auto"

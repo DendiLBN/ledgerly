@@ -1,15 +1,18 @@
 "use client";
 
-import { useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Text } from "@/components/common/text";
 
-export const SubmitButton = () => {
-  const { pending } = useFormStatus();
-  console.log("pending", pending);
+interface SubmitButtonProps {
+  isSubmitting: boolean;
+}
+
+export const SubmitButton: React.FC<SubmitButtonProps> = ({ isSubmitting }) => {
   return (
-    <Button className="w-full font-semibold">
-      <Text className={'pending && "text-transparent'}>Submit </Text>
+    <Button className="w-full font-semibold" disabled={isSubmitting}>
+      <Text className={isSubmitting ? "text-transparent" : ""}>
+        {isSubmitting ? "Submitting..." : "Submit"}
+      </Text>
     </Button>
   );
 };

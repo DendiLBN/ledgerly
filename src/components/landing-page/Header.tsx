@@ -15,16 +15,14 @@ export const Header = () => {
         <View className="flex justify-between items-center gap-4">
           <View className="flex items-center gap-4">
             <Text className="font-bold">
-              <Link href="/dashboard">Ledgerly</Link>
+              <Link href="/">Ledgerly</Link>
             </Text>
-
-            <SignedIn>
-              <Text className="-ml-2"></Text>
-            </SignedIn>
           </View>
           <View>
             <SignedOut>
-              <SignInButton />
+              <View className="bg-black text-white px-4 py-2 rounded-md">
+                <SignInButton />
+              </View>
             </SignedOut>
             <SignedIn>
               <UserButton />
