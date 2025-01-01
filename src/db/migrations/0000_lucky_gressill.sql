@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS "invoices" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"createTs" timestamp DEFAULT now() NOT NULL,
 	"value" integer NOT NULL,
+	"user_id" text NOT NULL,
 	"description" text NOT NULL,
 	"status" "status" NOT NULL
 );

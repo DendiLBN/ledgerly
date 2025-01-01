@@ -3,8 +3,6 @@ import { Text } from "@/components/common/text";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-import { Header } from "@/components/landing-page/Header";
-
 export default function Home() {
   return (
     <>
