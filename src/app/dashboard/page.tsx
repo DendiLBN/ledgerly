@@ -13,51 +13,59 @@ import {
 import { CirclePlus } from "lucide-react";
 import Link from "next/link";
 import { Text } from "@/components/common/text";
+import { Invoices } from "@/db/schema";
+import { db } from "@/db";
 
-export default function DashBoard() {
+export default async function DashBoard() {
+  const results = await db.select().from(Invoices);
+
   return (
     <View
       as="main"
       className="flex flex-col justify-center h-full text-center gap-6 max-w-5xl mx-auto my-12"
     >
-      <View className="flex justify-between">
-        <Text className="text-5xl font-bold">Dashboard</Text>
-        <Text>
-          <Button className="inline-flex" variant="ghost">
-            <CirclePlus className="h-4 w-4" />
-            <Link href="/invoices/new">Create Invoice</Link>
-          </Button>
-        </Text>
+      <View className="flex justify-between items-center">
+        <Text className="text-5xl font-bold text-gray-800">Dashboard</Text>
+        <Button className="inline-flex items-center gap-2">
+          <CirclePlus className="h-4 w-4" />
+          <Link href="/invoices/new">Create Invoice</Link>
+        </Button>
       </View>
-      <Table>
-        <TableCaption>A list of your recent invoices.</TableCaption>
+      <Table className="mt-6">
+        <TableCaption className="text-gray-500">
+          A list of your recent invoices.
+        </TableCaption>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px] p-4">Date</TableHead>
-            <TableHead className="p-4">Customer</TableHead>
-            <TableHead className="p-4">Email</TableHead>
+            <TableHead className="w-[100px] p-4 text-left">Date</TableHead>
+            <TableHead className="p-4 text-left">Customer</TableHead>
+            <TableHead className="p-4 text-left">Email</TableHead>
             <TableHead className="text-center p-4">Status</TableHead>
             <TableHead className="text-right p-4">Value</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          <TableRow>
-            <TableCell className="font-medium">
-              <View className="font-semibold">10/31/2024</View>
-            </TableCell>
-            <TableCell className="text-left">
-              <View className="font-semibold">Stefan Makler</View>
-            </TableCell>
-            <TableCell className="text-left p-4">
-              <View>Stefan.makler@gmail.com</View>
-            </TableCell>
-            <TableCell className="text-center  p-4">
-              <Badge className="rounded-full">Open</Badge>
-            </TableCell>
-            <TableCell className="text-right">
-              <View className="font-semibold  p-4">$250</View>
-            </TableCell>
-          </TableRow>
+          {results.map((result) => (
+            <TableRow key={result.id}>
+              <TableCell className="text-left p-4">
+                <Text className="font-semibold">
+                  {new Date(result.createTs).toLocaleDateString()}
+                </Text>
+              </TableCell>
+              <TableCell className="p-4 text-left">
+                <Text className="font-semibold">{result.name}</Text>
+              </TableCell>
+              <TableCell className="p-4 text-left">
+                <Text className="font-semibold">{result.email}</Text>
+              </TableCell>
+              <TableCell className="text-center p-4">
+                <Badge className="p-2">{result.status}</Badge>
+              </TableCell>
+              <TableCell className="text-right p-4">
+                <Text className="font-semibold">${result.value}</Text>
+              </TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
     </View>

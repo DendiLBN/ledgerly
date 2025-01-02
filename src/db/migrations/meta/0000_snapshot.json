@@ -1,5 +1,5 @@
 {
-  "id": "61d26e58-ac1d-4d4a-94fd-cca2458a7222",
+  "id": "4707527e-277c-486a-9bca-34456d199485",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -12,6 +12,18 @@
           "name": "id",
           "type": "serial",
           "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
           "notNull": true
         },
         "createTs": {

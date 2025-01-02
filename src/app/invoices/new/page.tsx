@@ -1,7 +1,5 @@
 "use client";
 
-// import { useState } from "react";
-// import { useRouter } from "next/navigation";
 import Container from "@/components/common/container";
 import { SubmitButton } from "@/components/SubmitButton";
 import { Input } from "@/components/ui/input";
@@ -12,29 +10,9 @@ import { View } from "@/components/common/view";
 import { createAction } from "@/app/actions";
 
 export default function NewInvoice() {
-  // const [error, setError] = useState<string>();
-  // const router = useRouter();
-
-  // const handleSubmit = async (formData: FormData) => {
-  //   console.log("formData", formData);
-  //   try {
-  //     await createAction(formData);
-  //     router.push("/dashboard");
-  //   } catch (error) {
-  //     setError(
-  //       (error as string) || "Failed to create invoice. Please try again."
-  //     );
-  //   }
-  // };
-
   return (
     <View as="main" className="h-full">
       <Container>
-        {/* {error && (
-          <Text className="bg-red-100 text-sm text-red-800 text-center px-3 py-2 rounded-lg mb-6">
-            {error}
-          </Text>
-        )} */}
         <View className="flex justify-between mb-6 mt-12">
           <Text className="text-3xl font-semibold">Create Invoice</Text>
         </View>

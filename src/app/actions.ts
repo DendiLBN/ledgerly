@@ -9,6 +9,8 @@ export async function createAction(formData: FormData) {
   console.log("formData", formData);
   const { userId } = await auth();
   const value = formData.get("value") as string;
+  const name = formData.get("name") as string;
+  const email = formData.get("email") as string;
   const description = formData.get("description") as string;
 
   if (!userId) {
@@ -23,6 +25,8 @@ export async function createAction(formData: FormData) {
         value: Number(value),
         description: description,
         status: "open",
+        name: name,
+        email: email,
         userId,
       })
       .returning({
