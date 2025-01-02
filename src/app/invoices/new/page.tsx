@@ -1,6 +1,6 @@
 "use client";
 
-import Container from "@/components/common/container";
+import { Container } from "@/components/common/container";
 import { SubmitButton } from "@/components/SubmitButton";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

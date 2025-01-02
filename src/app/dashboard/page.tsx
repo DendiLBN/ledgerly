@@ -15,9 +15,18 @@ import Link from "next/link";
 import { Text } from "@/components/common/text";
 import { Invoices } from "@/db/schema";
 import { db } from "@/db";
+import { auth } from "@clerk/nextjs/server";
+import { eq } from "drizzle-orm";
 
 export default async function DashBoard() {
-  const results = await db.select().from(Invoices);
+  const { userId } = await auth();
+
+  if (!userId) return;
+
+  const results = await db
+    .select()
+    .from(Invoices)
+    .where(eq(Invoices.userId, userId));
 
   return (
     <View
