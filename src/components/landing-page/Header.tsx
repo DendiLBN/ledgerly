@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import Container from "@/components/common/container";
+import { Container } from "@/components/common/container";
 
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 

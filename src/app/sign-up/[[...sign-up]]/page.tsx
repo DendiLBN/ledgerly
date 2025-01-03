@@ -4,7 +4,7 @@ import Container from "@/components/common/container";
 
 export default function SignUpPage() {
   return (
-    <Container>
+    <Container className="flex items-center justify-center ">
       <SignUp />
     </Container>
   );
