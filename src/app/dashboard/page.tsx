@@ -1,5 +1,4 @@
 import { View } from "@/components/common/view";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -13,20 +12,35 @@ import {
 import { CirclePlus } from "lucide-react";
 import Link from "next/link";
 import { Text } from "@/components/common/text";
-import { Invoices } from "@/db/schema";
+import { Customers, Invoices } from "@/db/schema";
 import { db } from "@/db";
 import { auth } from "@clerk/nextjs/server";
-import { eq } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
 
 export default async function DashBoard() {
-  const { userId } = await auth();
-
+  const { userId, orgId } = await auth();
   if (!userId) return;
 
-  const results = await db
-    .select()
-    .from(Invoices)
-    .where(eq(Invoices.userId, userId));
+  let results;
+
+  if (orgId) {
+    results = await db
+      .select()
+      .from(Invoices)
+      .innerJoin(Customers, eq(Invoices.customerId, Customers.id))
+      .where(eq(Invoices.organizationId, orgId));
+  } else {
+    results = await db
+      .select()
+      .from(Invoices)
+      .innerJoin(Customers, eq(Invoices.customerId, Customers.id))
+      .where(and(eq(Invoices.userId, userId), isNull(Invoices.organizationId)));
+  }
+
+  const invoices = results?.map(({ invoices, customers }) => ({
+    ...invoices,
+    customer: customers,
+  }));
 
   return (
     <View
@@ -54,7 +68,7 @@ export default async function DashBoard() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {results.map((result) => (
+          {invoices.map((result) => (
             <TableRow key={result.id}>
               <TableCell className="text-left p-4">
                 <Text className="font-semibold">
@@ -62,13 +76,13 @@ export default async function DashBoard() {
                 </Text>
               </TableCell>
               <TableCell className="p-4 text-left">
-                <Text className="font-semibold">{result.name}</Text>
+                <Text className="font-semibold">{result.customer.name}</Text>
               </TableCell>
               <TableCell className="p-4 text-left">
-                <Text className="font-semibold">{result.email}</Text>
+                <Text className="font-semibold">{result.customer.email}</Text>
               </TableCell>
               <TableCell className="text-center p-4">
-                <Badge className="p-2">{result.status}</Badge>
+                <button className="p-2">{result.status}</button>
               </TableCell>
               <TableCell className="text-right p-4">
                 <Text className="font-semibold">${result.value}</Text>

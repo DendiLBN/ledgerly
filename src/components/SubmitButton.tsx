@@ -6,7 +6,6 @@ import { Text } from "@/components/common/text";
 
 export const SubmitButton = () => {
   const { pending } = useFormStatus();
-  console.log("pending", pending);
 
   return (
     <Button type="submit" disabled={pending} className="w-full font-semibold">

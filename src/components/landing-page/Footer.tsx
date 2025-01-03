@@ -1,9 +1,9 @@
-import Container from "@/components/common/container";
+import { Container } from "@/components/common/container";
 
 import { Text } from "@/components/common/text";
 import { View } from "@/components/common/view";
 
-const Footer = () => {
+export const Footer = () => {
   return (
     <View as="footer" className="mt-8 mb-12">
       <Container>
@@ -15,5 +15,3 @@ const Footer = () => {
     </View>
   );
 };
-
-export default Footer;

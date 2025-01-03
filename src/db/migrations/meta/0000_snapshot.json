@@ -1,11 +1,11 @@
 {
-  "id": "4707527e-277c-486a-9bca-34456d199485",
+  "id": "506d0af3-7a7e-4479-ade9-57cd95f877b6",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.invoices": {
-      "name": "invoices",
+    "public.customers": {
+      "name": "customers",
       "schema": "",
       "columns": {
         "id": {
@@ -33,6 +33,44 @@
           "notNull": true,
           "default": "now()"
         },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "organizationId": {
+          "name": "organizationId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.invoices": {
+      "name": "invoices",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "createTs": {
+          "name": "createTs",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
         "value": {
           "name": "value",
           "type": "integer",
@@ -45,9 +83,21 @@
           "primaryKey": false,
           "notNull": true
         },
+        "organizationId": {
+          "name": "organizationId",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "description": {
           "name": "description",
           "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "customer_id": {
+          "name": "customer_id",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
@@ -60,7 +110,21 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "invoices_customer_id_customers_id_fk": {
+          "name": "invoices_customer_id_customers_id_fk",
+          "tableFrom": "invoices",
+          "tableTo": "customers",
+          "columnsFrom": [
+            "customer_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
@@ -75,8 +139,7 @@
       "values": [
         "open",
         "paid",
-        "void",
-        "uncollabled"
+        "void"
       ]
     }
   },
