@@ -5,10 +5,10 @@ import { Invoices, Status } from "@/db/schema";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { Customers } from "@/db/schema";
 
 export async function createAction(formData: FormData) {
-  console.log("formData", formData);
-  const { userId } = await auth();
+  const { userId, orgId } = await auth();
   const value = formData.get("value") as string;
   const name = formData.get("name") as string;
   const email = formData.get("email") as string;
@@ -19,23 +19,36 @@ export async function createAction(formData: FormData) {
   }
 
   try {
-    const results = await db
-      .insert(Invoices)
+    const [customer] = await db
+      .insert(Customers)
       .values({
         createTs: new Date(),
-        value: Number(value),
-        description: description,
-        status: "open",
         name: name,
         email: email,
         userId,
+        organizationId: orgId || null,
+      })
+      .returning({
+        id: Customers.id,
+      });
+
+    const invoice = await db
+      .insert(Invoices)
+      .values({
+        createTs: new Date(),
+        value: parseInt(value),
+        description,
+        userId,
+        customerId: customer.id,
+        status: "open",
+        organizationId: orgId || null,
       })
       .returning({
         id: Invoices.id,
       });
 
-    if (results && results.length > 0) {
-      redirect(`/invoices/${results[0].id}`);
+    if (invoice) {
+      redirect(`/invoices/${invoice[0].id}`);
     } else {
       throw new Error("Failed to create invoice.");
     }
@@ -59,4 +72,18 @@ export async function updateStatusAction(formData: FormData) {
 
   revalidatePath("/invoices/${id}", "page");
   console.log(results);
+}
+
+export async function deleteInvoiceAction(formData: FormData) {
+  const { userId } = await auth();
+  if (!userId) return;
+
+  const id = formData.get("id") as string;
+
+  const resultInvoice = await db
+    .delete(Invoices)
+    .where(and(eq(Invoices.id, parseInt(id)), eq(Invoices.userId, userId)));
+
+  console.log(resultInvoice);
+  redirect("/dashboard");
 }
