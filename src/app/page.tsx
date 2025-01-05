@@ -3,7 +3,7 @@ import { Text } from "@/components/common/text";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-export default function Home() {
+export default async function Home() {
   return (
     <>
       <View
