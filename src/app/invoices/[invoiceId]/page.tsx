@@ -3,16 +3,16 @@ import { Customers, Invoices } from "@/db/schema";
 import { db } from "@/db";
 import { notFound } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";
-import Invoice from "./Invoice";
+import Invoice from "@/app/invoices/[invoiceId]/Invoice";
 
 export default async function InvoicePage({
   params,
 }: {
-  params: { invoicesId: string };
+  params: { invoiceId: string };
 }) {
   const resolvedParams = await params;
 
-  const invoiceId = parseInt(resolvedParams.invoicesId);
+  const invoiceId = parseInt(resolvedParams.invoiceId);
 
   if (isNaN(invoiceId)) {
     throw new Error("Invoice ID must be a number");
@@ -33,10 +33,10 @@ export default async function InvoicePage({
     notFound();
   }
 
-  const invoices = {
+  const invoice = {
     ...results.invoices,
     customer: results.customers,
   };
 
-  return <Invoice Invoice={invoices} />;
+  return <Invoice Invoice={invoice} />;
 }
