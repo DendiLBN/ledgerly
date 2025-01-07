@@ -18,51 +18,58 @@ import { Text } from "@/components/common/text";
 interface InvoicePageProps {
   params: { invoiceId: string };
   searchParams: {
-    status?: string;
-    session_id?: string;
+    status: string;
+    session_id: string;
   };
 }
 
 export default async function PaymentPage({
-  params = { invoiceId: "" },
-  searchParams = {},
+  params,
+  searchParams,
 }: InvoicePageProps) {
-  console.log("Params received:", params);
-  console.log("Search Params received:", searchParams);
+  const resolvedParams = await params;
+  const rawInvoiceId = resolvedParams.invoiceId;
 
-  const invoiceId = Number.parseInt(params?.invoiceId || "0", 10);
+  const resolvedSearchParams = await searchParams;
+  const rawSessionId = resolvedSearchParams?.session_id;
 
-  if (Number.isNaN(invoiceId) || invoiceId <= 0) {
-    console.error("Invalid Invoice ID:", params?.invoiceId);
-    throw new Error("Invalid Invoice ID");
+  if (!rawInvoiceId) {
+    throw new Error("Invoice ID is missing in the parameters.");
   }
 
-  console.log("Fetching data for Invoice ID:", invoiceId);
+  const invoiceId = Number.parseInt(rawInvoiceId, 10);
+
+  if (Number.isNaN(invoiceId)) {
+    throw new Error("Invalid Invoice ID");
+  }
 
   if (!process.env.STRIPE_API_SECRET) {
     throw new Error("STRIPE_API_SECRET is not set in environment variables");
   }
 
   const stripe = new Stripe(process.env.STRIPE_API_SECRET);
-  const sessionId = searchParams.session_id;
-  const isSuccess = sessionId && searchParams.status === "success";
-  const isCanceled = searchParams.status === "canceled";
+
+  const sessionId = rawSessionId || "";
+  const isSuccess = sessionId && resolvedSearchParams.status === "success";
+  const isCanceled = resolvedSearchParams.status === "canceled";
   let isError = isSuccess && !sessionId;
 
   if (isSuccess) {
+    console.log("Success status: ", resolvedSearchParams.status);
     const { payment_status } = await stripe.checkout.sessions.retrieve(
       sessionId
     );
     if (payment_status !== "paid") {
       isError = true;
+      console.log("Payment status is not 'paid'.");
     } else {
       const formData = new FormData();
       formData.append("id", String(invoiceId));
       formData.append("status", "paid");
       await updateStatusAction(formData);
+      console.log("Invoice paid and status updated.");
     }
   }
-
   const [result] = await db
     .select({
       id: Invoices.id,
@@ -104,7 +111,7 @@ export default async function PaymentPage({
         <View className="grid grid-cols-2">
           <View>
             <View className="flex justify-between mb-8">
-              <div className="flex items-center gap-4 text-3xl font-semibold">
+              <View className="flex items-center gap-4 text-3xl font-semibold">
                 Invoice {invoice.id}
                 <Badge
                   className={cn(
@@ -117,7 +124,7 @@ export default async function PaymentPage({
                 >
                   {invoice.status}
                 </Badge>
-              </div>
+              </View>
             </View>
 
             <Text className="text-3xl mb-3">
@@ -138,10 +145,10 @@ export default async function PaymentPage({
               </form>
             )}
             {invoice.status === "paid" && (
-              <div className="flex gap-2 items-center text-xl font-bold">
+              <View className="flex gap-2 items-center text-xl font-bold">
                 <Check className="w-8 h-auto bg-green-500 rounded-full text-white p-1" />
                 Invoice Paid
-              </div>
+              </View>
             )}
           </View>
         </View>
