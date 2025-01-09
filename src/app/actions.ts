@@ -7,11 +7,11 @@ import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { Customers } from "@/db/schema";
-// import Stripe from "stripe";
 
-// const stripe = new Stripe(process.env.STRIPE_API_SECRET as string, {
-//   apiVersion: "2023-10-16",
-// });
+import { headers } from "next/headers";
+import Stripe from "stripe";
+
+const stripe = new Stripe(process.env.STRIPE_API_SECRET as string, {});
 
 export async function createAction(formData: FormData) {
   const { userId, orgId } = await auth();
@@ -111,29 +111,49 @@ export async function deleteInvoiceAction(formData: FormData) {
 }
 
 export async function createPayment(formData: FormData) {
-  const id = parseInt(formData.get("id") as string);
+  const { userId } = await auth();
 
-  if (isNaN(id)) {
-    throw new Error("Invalid Invoice ID");
+  if (!userId) {
+    throw new Error("User not authenticated");
   }
 
-  try {
-    const [result] = await db
-      .select({
-        status: Invoices.status,
-        value: Invoices.value,
-      })
-      .from(Invoices)
-      .where(eq(Invoices.id, id))
-      .limit(1);
+  const headersList = headers();
 
-    if (!result) {
-      throw new Error("Invoice not found");
-    }
-
-    console.log(result);
-  } catch (error) {
-    console.error("Error creating payment:", error);
-    throw error;
+  const origin = (await headersList).get("origin");
+  if (!origin) {
+    throw new Error("Origin not found in headers");
   }
+  const id = Number.parseInt(formData.get("id") as string);
+
+  const [result] = await db
+    .select({
+      status: Invoices.status,
+      value: Invoices.value,
+    })
+    .from(Invoices)
+    .where(eq(Invoices.id, id))
+    .limit(1);
+
+  const session = await stripe.checkout.sessions.create({
+    line_items: [
+      {
+        price_data: {
+          currency: "usd",
+          product: "prod_RXlZf0Lz6tFd4K",
+          unit_amount: result.value,
+        },
+        quantity: 1,
+      },
+    ],
+    mode: "payment",
+    success_url: `${origin}/invoices/${id}/payment?status=success&session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${origin}/invoices/${id}/payment?status=canceled&session_id={CHECKOUT_SESSION_ID}`,
+  });
+
+  if (!session.url) {
+    console.error("Stripe session URL is invalid or not returned.");
+    throw new Error("Invalid session URL");
+  }
+
+  redirect(session.url);
 }

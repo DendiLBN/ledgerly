@@ -1,6 +1,6 @@
 "use client";
 
-import { useOptimistic } from "react";
+import { useState } from "react";
 import { View } from "@/components/common/view";
 import { Text } from "@/components/common/text";
 import { Customers, Invoices } from "@/db/schema";
@@ -35,20 +35,17 @@ interface InvoicePageProps {
 }
 
 export default function Invoice({ Invoice }: InvoicePageProps) {
-  const [currentStatus, setCurrentStatus] = useOptimistic(
-    Invoice.status,
-    (newStatus) => {
-      return String(newStatus);
-    }
+  const [currentStatus, setCurrentStatus] = useState(
+    Invoice.status || "default"
   );
 
-  async function hadleOnUptadeStatus(formData: FormData) {
-    await updateStatusAction(formData);
-    setCurrentStatus(formData.get("status"));
+  async function handleOnUpdateStatus(formData: FormData) {
     try {
       await updateStatusAction(formData);
+
+      setCurrentStatus(formData.get("status") as string);
     } catch (e) {
-      String(e);
+      console.error(e);
       setCurrentStatus(Invoice.status);
     }
   }
@@ -87,7 +84,7 @@ export default function Invoice({ Invoice }: InvoicePageProps) {
                 <DropdownMenuContent>
                   {AVAILABLE_STATUSES.map((status) => (
                     <DropdownMenuItem key={status.id}>
-                      <form action={hadleOnUptadeStatus}>
+                      <form action={handleOnUpdateStatus}>
                         <input type="hidden" name="id" value={Invoice.id} />
                         <input type="hidden" name="status" value={status.id} />
                         <button type="submit" className="w-full text-left">
