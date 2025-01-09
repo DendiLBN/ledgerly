@@ -19,13 +19,10 @@ export async function createAction(formData: FormData) {
   const name = formData.get("name") as string;
   const email = formData.get("email") as string;
   const description = formData.get("description") as string;
-  const id = formData.get("id") as string;
 
   if (!userId) {
     throw new Error("User not authenticated");
   }
-
-  console.log(id, "invoiceId");
 
   try {
     const [customer] = await db
@@ -81,7 +78,7 @@ export async function updateStatusAction(formData: FormData) {
       .where(and(eq(Invoices.userId, userId), eq(Invoices.id, parseInt(id))));
 
     revalidatePath(`/invoices/${id}`, "page");
-    console.log(results);
+    if (!results) return;
   } catch (error) {
     console.error("Error updating invoice status:", error);
     throw error;
@@ -123,6 +120,7 @@ export async function createPayment(formData: FormData) {
   if (!origin) {
     throw new Error("Origin not found in headers");
   }
+
   const id = Number.parseInt(formData.get("id") as string);
 
   const [result] = await db
@@ -134,24 +132,25 @@ export async function createPayment(formData: FormData) {
     .where(eq(Invoices.id, id))
     .limit(1);
 
+  const unitAmount = Math.round(result.value * 100);
+
   const session = await stripe.checkout.sessions.create({
     line_items: [
       {
         price_data: {
-          currency: "usd",
-          product: "prod_RXlZf0Lz6tFd4K",
-          unit_amount: result.value,
+          currency: "pln",
+          product: process.env.STRIPE_ID_PRODUCT,
+          unit_amount: unitAmount,
         },
         quantity: 1,
       },
     ],
     mode: "payment",
-    success_url: `${origin}/invoices/${id}/payment?status=success&session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${origin}/invoices/${id}/payment?status=canceled&session_id={CHECKOUT_SESSION_ID}`,
+    success_url: `${origin}/invoices/${id}/payment?status=success={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${origin}/invoices/${id}/payment?status=canceled={CHECKOUT_SESSION_ID}`,
   });
 
   if (!session.url) {
-    console.error("Stripe session URL is invalid or not returned.");
     throw new Error("Invalid session URL");
   }
 

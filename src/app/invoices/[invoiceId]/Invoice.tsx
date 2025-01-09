@@ -27,6 +27,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 interface InvoicePageProps {
   Invoice: typeof Invoices.$inferSelect & {
@@ -75,6 +76,15 @@ export default function Invoice({ Invoice }: InvoicePageProps) {
               </View>
             </View>
             <View className="flex gap-4">
+              <View>
+                <Text>
+                  <Link href={`/invoices/${Invoice.id}/payment`}>
+                    <button className="inline-flex items-center gap-2 bg-green-600 text-white hover:bg-green-700 w-fit px-4 py-2 rounded-md">
+                      Pay Invoice
+                    </button>
+                  </Link>
+                </Text>
+              </View>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button className="inline-flex items-center gap-2 bg-blue-600 text-white hover:bg-blue-700 w-fit px-4 py-2 rounded-md">
@@ -147,10 +157,12 @@ export default function Invoice({ Invoice }: InvoicePageProps) {
           </View>
 
           <View className="flex flex-col gap-2">
-            <Text variant="h1" className="text-2xl font-semibold text-gray-700">
-              ${Invoice.value.toFixed(2)}
+            <Text variant="h1" className="text-2xl mb-4 font-semibold">
+              {Invoice.value} PLN
             </Text>
-            <Text className="text-lg text-gray-600">{Invoice.description}</Text>
+            <Text className="text-lg font-semibold flex mt-3">
+              {Invoice.description}
+            </Text>
           </View>
 
           <View className="mt-8">
@@ -161,20 +173,21 @@ export default function Invoice({ Invoice }: InvoicePageProps) {
               Billing Details
             </Text>
             <View className="grid gap-2 text-left">
-              <Text className="text-gray-700">
-                <span className="font-semibold">Invoice ID:</span> {Invoice.id}
+              <Text className="text-gray-700 ">
+                <span className="font-semibold mr-2">Invoice ID:</span>{" "}
+                {Invoice.id}
               </Text>
-              <Text className="text-gray-700">
-                <span className="font-semibold">Invoice Date:</span>
+              <Text className="text-gray-700 ">
+                <span className="font-semibold mr-2">Invoice Date:</span>
                 {new Date(Invoice.createTs).toLocaleDateString()}
               </Text>
               <Text className="text-gray-700">
-                <span className="font-semibold">Billing Name:</span>
+                <span className="font-semibold mr-2">Billing Name:</span>
                 {Invoice.customer.name}
               </Text>
               <Text className="text-gray-700">
-                <span className="font-semibold">Billing Email:</span>
-                {Invoice.customer.email}
+                <span className="font-semibold mr-2">Billing Email:</span>
+                <span className="">{Invoice.customer.email}</span>
               </Text>
             </View>
           </View>
