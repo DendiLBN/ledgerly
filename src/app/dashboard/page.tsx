@@ -22,7 +22,7 @@ import {
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
-export default async function Home() {
+export default async function DashBoard() {
   const { userId } = await auth();
 
   if (!userId) return;
