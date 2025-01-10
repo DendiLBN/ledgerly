@@ -35,20 +35,6 @@ export default async function Home() {
     .from(Invoices)
     .innerJoin(Customers, eq(Invoices.customerId, Customers.id));
 
-  // if (orgId) {
-  //   results = await db
-  //     .select()
-  //     .from(Invoices)
-  //     .innerJoin(Customers, eq(Invoices.customerId, Customers.id))
-  //     .where(eq(Invoices.organizationId, orgId));
-  // } else {
-  //   results = await db
-  //     .select()
-  //     .from(Invoices)
-  //     .innerJoin(Customers, eq(Invoices.customerId, Customers.id))
-  //     .where(and(eq(Invoices.userId, userId), isNull(Invoices.organizationId)));
-  // }
-
   const invoices = results?.map(({ invoices, customers }) => {
     return {
       ...invoices,
@@ -126,7 +112,7 @@ export default async function Home() {
                       href={`/invoices/${result.id}`}
                       className="block p-4 font-semibold"
                     >
-                      ${(result.value / 100).toFixed(2)}
+                      {(result.value * 1).toFixed(2)} PLN
                     </Link>
                   </TableCell>
                 </TableRow>
